@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>3D with WebGL</title>
+    <style>
+    body{
+        margin: 0px;
+        background-color: #ffffff;
+        overflow: hidden;
+    }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <script src="JS/three.min.js"></script>
+    <script src="JS/TrackballControls.js"></script>
+    <script>
+        var camera, scene, renderer, controls, clock, particleSystem;
+        init();
+        animate();
+        function init(){
+            var container = document.getElementById('container');
+            camera = new THREE.PerspectiveCamera(
+                60,
+                window.innerWidth / window.innerHeight,
+                1,
+                1000
+            );
+            camera.position.z = 1000;
+            controls = new THREE.TrackballControls(camera);
+            controls.rotateSpeed = 1.0;
+            controls.zoomSpeed = 1.2;
+            controls.panSpeed = 0.8;
+            controls.noZoom = false;
+            controls.noPan = false;
+            controls.staticMoving = true;
+            controls.dynamicDampingFactor = 0.3;
+            controls.keys = [65, 83, 68];
+            controls.addEventListener('change', render);
+            scene = new THREE.Scene();
+            var light, object;
+            var ambientLight = new THREE.AmbientLight(0xcccccc, 50);
+            scene.add(ambientLight);
+
+           
+
+            var anillos = new THREE.TextureLoader().load('TEXTURES/anillos.jpg');
+            anillos.wrapS = anillos.wrapT = THREE.RepeatWrapping;
+            anillos.anisotropy = 16;
+
+            var materialanillos= new THREE.MeshBasicMaterial({
+                map: anillos,
+                side: THREE.DoubleSide
+            });
+            object = new THREE.Mesh(new THREE.TorusKnotGeometry(1250, 20, 20, 20), materialanillos);
+            object.position.set(0, 0, 0);
+            scene.add(object);
+
+         
+
+            var particles = new THREE.Geometry;
+            for(var p=0; p<1000;p++){
+                var particle = new THREE.Vector3(Math.random() * 1000 , Math.random() * 1000 ,Math.random() * 1000 );
+                particles.vertices.push(particle);
+            }
+            var particleTexture = THREE.ImageUtils.loadTexture('TEXTURES/start.png');
+            var particleMaterial = new THREE.ParticleBasicMaterial({
+                map: particleTexture,
+                transparent: true,
+                size: 5
+            });
+
+            clock = new THREE.Clock;
+
+            particleSystem = new THREE.ParticleSystem(particles, particleMaterial);
+            scene.add(particleSystem);
+            
+            renderer = new THREE.WebGLRenderer({
+                antialias: true
+            });
+
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+            container.appendChild(renderer.domElement);
+            window.addEventListener('resize', onWindowResize, false);
+
+            camera.lookAt(new THREE.Vector3(0, 0, 0));
+            render();
+           
+        }
+
+        function onWindowResize(){
+
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            controls.handleResize();
+            render();
+        }
+
+        function animate(){
+            requestAnimationFrame(animate);
+            controls.update();
+           
+            render();
+        }
+
+        function render(){
+            var delta = clock.getDelta() * 0.05;
+            
+            particleSystem.rotation.y += delta;
+           
+            renderer.render(scene, camera);
+        }
+    </script>
+</body>
+</html>

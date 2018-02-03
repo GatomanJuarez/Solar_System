@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>3D with WebGL</title>
+    <style>
+    body{
+        margin: 0px;
+        background-color: #000000;
+        overflow: hidden;
+    }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <script src="JS/three.min.js"></script>
+    <script src="JS/TrackballControls.js"></script>
+    <script>
+        var camera, scene, renderer, controls, clock, particleSystem;
+        init();
+        animate();
+        function init(){
+            var container = document.getElementById('container');
+            camera = new THREE.PerspectiveCamera(
+                60,
+                window.innerWidth / window.innerHeight,
+                1,
+                1000
+            );
+            camera.position.z = 1000;
+            controls = new THREE.TrackballControls(camera);
+            controls.rotateSpeed = 1.0;
+            controls.zoomSpeed = 1.2;
+            controls.panSpeed = 0.8;
+            controls.noZoom = false;
+            controls.noPan = false;
+            controls.staticMoving = true;
+            controls.dynamicDampingFactor = 0.3;
+            controls.keys = [65, 83, 68];
+            controls.addEventListener('change', render);
+            scene = new THREE.Scene();
+            var light, object;
+            var ambientLight = new THREE.AmbientLight(0xcccccc, 50);
+            scene.add(ambientLight);
+
+            ///////////////////////////////////////////////////////////////////////////
+            var sun = new THREE.TextureLoader().load('TEXTURES/sun.jpg');
+            sun.wrapS = sun.wrapT = THREE.RepeatWrapping;
+            sun.anisotropy = 16;
+
+            var materialsun = new THREE.MeshBasicMaterial({
+                map: sun,
+                side: THREE.DoubleSide
+            });
+            sun = new THREE.Mesh(new THREE.SphereGeometry(1500, 400, 200), materialsun);
+            sun.position.set(-3000, 0, 0);
+            scene.add(sun);
+            ///////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            var mercurio = new THREE.TextureLoader().load('TEXTURES/mercurio.jpg');
+            mercurio.wrapS = mercurio.wrapT = THREE.RepeatWrapping;
+            mercurio.anisotropy = 16;
+
+            var materialmercurio = new THREE.MeshBasicMaterial({
+                map: mercurio,
+                side: THREE.DoubleSide
+            });
+            object = new THREE.Mesh(new THREE.SphereGeometry(16.25, 1000, 250), materialmercurio);
+            object.position.set(-1000, 0, 0);
+            scene.add(object);
+            ///////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            var venus = new THREE.TextureLoader().load('TEXTURES/venus.jpg');
+            venus.wrapS = venus.wrapT = THREE.RepeatWrapping;
+            venus.anisotropy = 16;
+
+            var materialvenus= new THREE.MeshBasicMaterial({
+                map: venus,
+                side: THREE.DoubleSide
+            });
+            object = new THREE.Mesh(new THREE.SphereGeometry(32.5, 100, 500), materialvenus);
+            object.position.set(-500, 0, 0);
+            scene.add(object);
+            ///////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            var earth = new THREE.TextureLoader().load('TEXTURES/earth.jpg');
+            earth.wrapS = earth.wrapT = THREE.RepeatWrapping;
+            earth.anisotropy = 16;
+
+            var materialearth = new THREE.MeshBasicMaterial({
+                map: earth,
+                side: THREE.DoubleSide
+            });
+            object = new THREE.Mesh(new THREE.SphereGeometry(75, 20, 10), materialearth);
+            object.position.set(0, 0, 0);
+            scene.add(object);
+            
+
+            
+            ///////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            var mars = new THREE.TextureLoader().load('TEXTURES/mars.jpg');
+            mars.wrapS = mars.wrapT = THREE.RepeatWrapping;
+            mars.anisotropy = 16;
+
+            var materialmars= new THREE.MeshBasicMaterial({
+                map: mars,
+                side: THREE.DoubleSide
+            });
+            object = new THREE.Mesh(new THREE.SphereGeometry(52.75, 19, 11.5), materialmars);
+            object.position.set(500, 0, 0);
+            scene.add(object);
+            ///////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            var jupiter = new THREE.TextureLoader().load('TEXTURES/jupiter.jpg');
+            jupiter.wrapS = jupiter.wrapT = THREE.RepeatWrapping;
+            jupiter.anisotropy = 16;
+
+            var materialjupiter= new THREE.MeshBasicMaterial({
+                map: jupiter,
+                side: THREE.DoubleSide
+            });
+            object = new THREE.Mesh(new THREE.SphereGeometry(150, 40, 20), materialjupiter);
+            object.position.set(1500, 0, 0);
+            scene.add(object);
+            ///////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            var saturn = new THREE.TextureLoader().load('TEXTURES/saturn.jpg');
+            saturn.wrapS = saturn.wrapT = THREE.RepeatWrapping;
+            saturn.anisotropy = 16;
+
+            var materialsaturn= new THREE.MeshBasicMaterial({
+                map: saturn,
+                side: THREE.DoubleSide
+            });
+            object = new THREE.Mesh(new THREE.SphereGeometry(125, 40, 20), materialsaturn);
+            object.position.set(2200, 0, 0);
+            scene.add(object);
+            ///////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            var uranus = new THREE.TextureLoader().load('TEXTURES/uranus.png');
+            uranus.wrapS = uranus.wrapT = THREE.RepeatWrapping;
+            uranus.anisotropy = 16;
+
+            var materialuranus= new THREE.MeshBasicMaterial({
+                map: uranus,
+                side: THREE.DoubleSide
+            });
+            object = new THREE.Mesh(new THREE.SphereGeometry(100, 40, 20), materialuranus);
+            object.position.set(2900, 0, 0);
+            scene.add(object);
+            ///////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            var neptune = new THREE.TextureLoader().load('TEXTURES/neptune.jpg');
+            neptune.wrapS = neptune.wrapT = THREE.RepeatWrapping;
+            neptune.anisotropy = 16;
+
+            var materialneptune= new THREE.MeshBasicMaterial({
+                map: neptune,
+                side: THREE.DoubleSide
+            });
+            object = new THREE.Mesh(new THREE.SphereGeometry(80, 40, 20), materialneptune);
+            object.position.set(3500, 0, 0);
+            scene.add(object);
+            ///////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            var pluto = new THREE.TextureLoader().load('TEXTURES/pluto.jpg');
+            pluto.wrapS = neptune.wrapT = THREE.RepeatWrapping;
+            pluto.anisotropy = 16;
+
+            var materialpluto= new THREE.MeshBasicMaterial({
+                map: pluto,
+                side: THREE.DoubleSide
+            });
+            object = new THREE.Mesh(new THREE.SphereGeometry(10, 10, 15), materialpluto);
+            object.position.set(4000, 0, 0);
+            scene.add(object);
+            ///////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////
+          
+
+            
+            var particles = new THREE.Geometry;
+            for(var p=0; p<100000;p++){
+                var particle = new THREE.Vector3(Math.random() * 5000 , Math.random() * 4000 ,Math.random() * 4000 );
+                particles.vertices.push(particle);
+            }
+
+            var particleTexture = THREE.ImageUtils.loadTexture('TEXTURES/start.png');
+            var particleMaterial = new THREE.ParticleBasicMaterial({
+                map: particleTexture,
+                transparent: true,
+                size: 5
+            });
+
+            clock = new THREE.Clock;
+
+            particleSystem = new THREE.ParticleSystem(particles, particleMaterial);
+            scene.add(particleSystem);
+            
+
+            renderer = new THREE.WebGLRenderer({
+                antialias: true
+            });
+
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+            container.appendChild(renderer.domElement);
+            window.addEventListener('resize', onWindowResize, false);
+
+            camera.lookAt(new THREE.Vector3(0, 0, 0));
+            render();
+           
+        }
+
+        function onWindowResize(){
+
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            controls.handleResize();
+            render();
+        }
+
+        function animate(){
+            requestAnimationFrame(animate);
+            controls.update();
+           
+            render();
+        }
+
+        function render(){
+            var delta = clock.getDelta() * 0.05;
+            
+            particleSystem.rotation.y += delta;
+           
+            renderer.render(scene, camera);
+        }
+    </script>
+</body>
+</html>
