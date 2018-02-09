@@ -20,7 +20,25 @@
     <script src="js/three.min.js"></script>
     <script src="js/TrackballControls.js"></script>
     <script>
-        var container, camera, scene, renderer, controls, clock, particleSystem,sol,luna,mercurio,venus,tierra,marte,jupiter,saturno,saturnoa,urano,neptuno,pluton;
+        var container;
+        var camera;
+        var scene;
+        var renderer;
+        var controls;
+        var clock;
+        var particleSystem;
+        var sol;
+        var luna; 
+        var mercurio;
+        var venus;
+        var tierra;
+        var marte;
+        var jupiter;
+        var saturno;
+        var saturno;
+        var urano;
+        var neptuno;
+        var pluton;
         
         
         init();
@@ -169,8 +187,8 @@
             scene.add(pluton);
 
             var particles = new THREE.Geometry;
-            for (var p = 0; p < 1000000; p++) {
-                var particle = new THREE.Vector3(Math.random() * 35000 - 9500, Math.random() * 35000 - 9500, Math.random() * 35000 - 9500);
+            for (var p = 0; p < 700000; p++) {
+                var particle = new THREE.Vector3(Math.random() * 15000 - 5500, Math.random() * 15000 - 5500, Math.random() * 15000 - 5500);
                 particles.vertices.push(particle);
             }
             function orbita(radio){
@@ -256,7 +274,7 @@
         function render() {
             var delta = clock.getDelta();
             delta2 += delta;
-            var timer = Date.now() * 0.01;
+            var timer = Date.now() * 0.0001;
             particleSystem.rotation.y += delta*.01;
             sol.rotation.y += delta;
             mercurio.rotation.y += delta;
@@ -264,14 +282,32 @@
             tierra.rotation.y += delta;
             marte.rotation.y += delta;
             jupiter.rotation.y += delta;
+            saturno.rotation.y += delta;
             urano.rotation.y += delta;
             neptuno.rotation.y += delta;
-            luna.rotation.y += delta;
             pluton.rotation.y += delta;
+            //Orbita
             particleSystem2.position.x = saturno.position.x;
             particleSystem2.position.z = saturno.position.z;
             particleSystem2.rotation.x = delta;
-            
+            mercurio.position.x = 120*Math.cos(delta2*7);
+            mercurio.position.z = 120*Math.sin(delta2*7);
+            venus.position.x = 170*Math.cos(delta2*5);
+            venus.position.z = 170*Math.sin(delta2*5);
+            tierra.position.x = 250*Math.cos(delta2*3.5);
+            tierra.position.z = 250*Math.sin(delta2*3.5);
+            marte.position.x = 320*Math.cos(delta2*2.5);
+            marte.position.z = 320*Math.sin(delta2*2.5);
+            jupiter.position.x = 390*Math.cos(delta2*2);
+            jupiter.position.z = 390*Math.sin(delta2*2);
+            saturno.position.x = 460*Math.cos(delta2*1.5);
+            saturno.position.z = 460*Math.sin(delta2*1.5);
+            urano.position.x = 550*Math.cos(delta2*1.1);
+            urano.position.z = 550*Math.sin(delta2*1.1);
+            neptuno.position.x = 620*Math.cos(delta2*0.9);
+            neptuno.position.z = 620*Math.sin(delta2*0.9);
+            pluton.position.x = 690*Math.cos(delta2*0.3);
+            pluton.position.z = 690*Math.sin(delta2*0.3);
             renderer.render(scene, camera);
         }
 
